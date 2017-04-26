@@ -1,0 +1,39 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Sewer Assessor
+qgisMinimumVersion=2.0
+description=De Sewer Assessor is een QGIS plug-in die helpt bij het bepalen van eigenschappen van de riolering.
+version=0.1
+author=Nelen & Schuurmans
+email=madeleine.vanwinkel@nelen-schuurmans.nl
+
+about=Doel: Het doel van deze plug-in is een beter inzicht te krijgen in de riolering. Functies: De plug-in helpt bij het bepalen van de volgende eigenschappen van het riool en/ of de leidingen: * Restlevensduur riolering * Integrale levensduur * Afstromingscontrole leidingen * Controle aansluitingen onderheide riolering Requirements: QGIS 2.14.12
+
+tracker=https://github.com/nens/SewerAssessor
+repository=https://github.com/nens/SewerAssessor
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=https://github.com/nens/SewerAssessor
+
+# Tags are comma separated with spaces allowed
+tags=riool, riolering, sewer, assessor, restlevensduur, integraal, MBOP, integrale levensduur, afstromingscontrole, leidingen, aansluitingen, onderheid, onderheide
+
+homepage=https://github.com/nens/SewerAssessor
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
