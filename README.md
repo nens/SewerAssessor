@@ -2,7 +2,7 @@
 QGIS plug-in for assessing properties of the sewer.
 
 ## Features
-* 
+* Mock-up dockwidget for assessing sewer properties
 
 ## Requirements
 * QGIS 2.14
