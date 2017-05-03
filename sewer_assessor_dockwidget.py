@@ -26,6 +26,12 @@ import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import pyqtSignal
 
+from .utils.constants import TEXTBOX_R_I_GEBIEDSGRENZEN
+from .utils.constants import TEXTBOX_R_I_GEM_ZETTINGSSNELHEID_PUT
+from .utils.constants import TEXTBOX_R_I_RIOOLPUTTEN
+from .utils.constants import TEXTBOX_R_I_RIOOLLEIDINGEN
+from .utils.constants import TEXTBOX_R_I_AHN
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'sewer_assessor_dockwidget_base.ui'))
 
@@ -48,3 +54,15 @@ class SewerAssessorDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.closingPlugin.emit()
         event.accept()
 
+    def set_filename(self, TEXTBOX, filename):
+        """Set the filename in the proper textbox."""
+        if TEXTBOX == TEXTBOX_R_I_GEBIEDSGRENZEN:
+            self.r_i_gebiedsgrenzen_text.setText(filename)
+        if TEXTBOX == TEXTBOX_R_I_GEM_ZETTINGSSNELHEID_PUT:
+            self.r_i_gem_zettingssnelheid_put_text.setText(filename)
+        if TEXTBOX == TEXTBOX_R_I_RIOOLPUTTEN:
+            self.r_i_rioolputten_text.setText(filename)
+        if TEXTBOX == TEXTBOX_R_I_RIOOLLEIDINGEN:
+            self.r_i_rioolleidingen_text.setText(filename)
+        if TEXTBOX == TEXTBOX_R_I_AHN:
+            self.r_i_ahn_text.setText(filename)
