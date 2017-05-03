@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -409,7 +409,7 @@
         <string>Zoek...</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="r_i_riool_leidingen_text">
+      <widget class="QLineEdit" name="r_i_rioolleidingen_text">
        <property name="geometry">
         <rect>
          <x>200</x>

@@ -20,14 +20,26 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os.path
+
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from PyQt4.QtGui import QAction, QIcon
 # Initialize Qt resources from file resources.py
 import resources
 
 # Import the code for the DockWidget
-from sewer_assessor_dockwidget import SewerAssessorDockWidget
-import os.path
+from .sewer_assessor_dockwidget import SewerAssessorDockWidget
+from .utils.get_data import get_file
+from .utils.constants import BUTTON_R_I_GEBIEDSGRENZEN
+from .utils.constants import TEXTBOX_R_I_GEBIEDSGRENZEN
+from .utils.constants import BUTTON_R_I_GEM_ZETTINGSSNELHEID_PUT
+from .utils.constants import TEXTBOX_R_I_GEM_ZETTINGSSNELHEID_PUT
+from .utils.constants import BUTTON_R_I_RIOOLPUTTEN
+from .utils.constants import TEXTBOX_R_I_RIOOLPUTTEN
+from .utils.constants import BUTTON_R_I_RIOOLLEIDINGEN
+from .utils.constants import TEXTBOX_R_I_RIOOLLEIDINGEN
+from .utils.constants import BUTTON_R_I_AHN
+from .utils.constants import TEXTBOX_R_I_AHN
 
 
 class SewerAssessor:
@@ -72,7 +84,6 @@ class SewerAssessor:
 
         self.pluginIsActive = False
         self.dockwidget = None
-
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -222,6 +233,17 @@ class SewerAssessor:
             if self.dockwidget == None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = SewerAssessorDockWidget()
+                # Connect the search buttons with the search_file functions
+                self.dockwidget.r_i_gebiedsgrenzen_search.clicked.connect(
+                    self.search_file_r_i_gebiedsgrenzen)
+                self.dockwidget.r_i_gem_zettingssnelheid_put_search.clicked.connect(
+                    self.search_file_r_i_gem_zettingssnelheid_put_search)
+                self.dockwidget.r_i_rioolputten_search.clicked.connect(
+                    self.search_file_r_i_rioolputten_search)
+                self.dockwidget.r_i_rioolleidingen_search.clicked.connect(
+                    self.search_file_r_i_rioolleidingen_search)
+                self.dockwidget.r_i_ahn_search.clicked.connect(
+                    self.search_file_r_i_ahn)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -231,3 +253,32 @@ class SewerAssessor:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
+    def search_file_r_i_gebiedsgrenzen(self):
+        self.search_file(BUTTON_R_I_GEBIEDSGRENZEN)
+
+    def search_file_r_i_gem_zettingssnelheid_put_search(self):
+        self.search_file(BUTTON_R_I_GEM_ZETTINGSSNELHEID_PUT)
+
+    def search_file_r_i_rioolputten_search(self):
+        self.search_file(BUTTON_R_I_RIOOLPUTTEN)
+
+    def search_file_r_i_rioolleidingen_search(self):
+        self.search_file(BUTTON_R_I_RIOOLLEIDINGEN)
+
+    def search_file_r_i_ahn(self):
+        self.search_file(BUTTON_R_I_AHN)
+
+    def search_file(self, BUTTON):
+        """Function to search a file."""
+        if BUTTON == BUTTON_R_I_GEBIEDSGRENZEN:
+            textbox = TEXTBOX_R_I_GEBIEDSGRENZEN
+        if BUTTON == BUTTON_R_I_GEM_ZETTINGSSNELHEID_PUT:
+            textbox = TEXTBOX_R_I_GEM_ZETTINGSSNELHEID_PUT
+        if BUTTON == BUTTON_R_I_RIOOLPUTTEN:
+            textbox = TEXTBOX_R_I_RIOOLPUTTEN
+        if BUTTON == BUTTON_R_I_RIOOLLEIDINGEN:
+            textbox = TEXTBOX_R_I_RIOOLLEIDINGEN
+        if BUTTON == BUTTON_R_I_AHN:
+            textbox = TEXTBOX_R_I_AHN
+        filename = get_file(self)
+        self.dockwidget.set_filename(textbox, filename)

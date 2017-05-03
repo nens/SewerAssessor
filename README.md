@@ -2,6 +2,7 @@
 QGIS plug-in for assessing properties of the sewer.
 
 ## Features
+* Browsing files for "Restlevensduur" tab
 * Mock-up dockwidget for assessing sewer properties
 
 ## Requirements
