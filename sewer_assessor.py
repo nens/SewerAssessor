@@ -40,6 +40,8 @@ from .utils.constants import BUTTON_R_I_RIOOLLEIDINGEN
 from .utils.constants import TEXTBOX_R_I_RIOOLLEIDINGEN
 from .utils.constants import BUTTON_R_I_AHN
 from .utils.constants import TEXTBOX_R_I_AHN
+from .utils.layer import create_memorylayer_of_shapefilelayer
+from .utils.layer import join_layers
 
 
 class SewerAssessor:
@@ -244,6 +246,10 @@ class SewerAssessor:
                     self.search_file_r_i_rioolleidingen_search)
                 self.dockwidget.r_i_ahn_search.clicked.connect(
                     self.search_file_r_i_ahn)
+                # Connect gem zettingssnelheid put to gem_zettingssnelheid_put
+                # function
+                self.dockwidget.r_o_gem_zettingssnelheid_put_button.clicked.connect(
+                    self.gem_zettingssnelheid_put)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -282,3 +288,26 @@ class SewerAssessor:
             textbox = TEXTBOX_R_I_AHN
         filename = get_file(self)
         self.dockwidget.set_filename(textbox, filename)
+
+    def gem_zettingssnelheid_put(self):
+        """Bereken en toon gemiddelde zettingssnelheid per put."""
+        # 1. Laad shapefile in met putdata (putten_export_kikker.shp)
+        self.layer_rioolputten = self.iface.addVectorLayer(
+            self.dockwidget.r_i_rioolputten_text.text(),
+            "putten_export_kikker",
+            "ogr")
+        # 2. Laad shapefile in met putcodes en zettingssnelheden
+        # (putten_stats.shp)
+        self.layer_gem_zettingssnelheid_put = self.iface.addVectorLayer(
+            self.dockwidget.r_i_gem_zettingssnelheid_put_text.text(),
+            "putten_stats",
+            "ogr")
+        # 3. Create a new memory layer with the features of the putdata
+        # (putten_export_kikker.shp)
+        self.layer_rioolputten_memory = create_memorylayer_of_shapefilelayer(
+            self.layer_rioolputten, "rioolputten")
+
+        # 4. Join putdata(Knoopnr) with the putten of putten_stats.shp
+        # (putcode)
+        join_layers(
+            self.layer_rioolputten_memory, self.layer_gem_zettingssnelheid_put)

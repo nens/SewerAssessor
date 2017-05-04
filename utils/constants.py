@@ -11,3 +11,5 @@ BUTTON_R_I_RIOOLLEIDINGEN = "r_i_rioolleidingen_search"
 TEXTBOX_R_I_RIOOLLEIDINGEN = "r_i_rioolleidingen_text"
 BUTTON_R_I_AHN = "r_i_ahn_search"
 TEXTBOX_R_I_AHN = "r_i_ahn_text"
+
+EPSG3857 = "EPSG:28992"
