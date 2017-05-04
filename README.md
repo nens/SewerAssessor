@@ -2,7 +2,9 @@
 QGIS plug-in for assessing properties of the sewer.
 
 ## Features
-* Browsing files for "Restlevensduur" tab
+* Add shapefiles ('Gem. zettingssnelheid put' and 'Riool putten') as vector layers
+* Joined memory layer is created of 'Gem. zettingssnelheid put' and 'Riool putten' when pressing 'Gem. zettingssnelheid put' 'Toon' button
+* Browse files for "Restlevensduur" tab
 * Mock-up dockwidget for assessing sewer properties
 
 ## Requirements
