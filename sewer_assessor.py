@@ -21,6 +21,8 @@
  ***************************************************************************/
 """
 import os.path
+import processing
+import re
 
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from PyQt4.QtGui import QAction, QIcon
@@ -30,6 +32,7 @@ import resources
 # Import the code for the DockWidget
 from .sewer_assessor_dockwidget import SewerAssessorDockWidget
 from .utils.get_data import get_file
+from .utils.save_data import save_shape
 from .utils.constants import BUTTON_R_I_GEBIEDSGRENZEN
 from .utils.constants import TEXTBOX_R_I_GEBIEDSGRENZEN
 from .utils.constants import BUTTON_R_I_GEM_ZETTINGSSNELHEID_PUT
@@ -41,7 +44,7 @@ from .utils.constants import TEXTBOX_R_I_RIOOLLEIDINGEN
 from .utils.constants import BUTTON_R_I_AHN
 from .utils.constants import TEXTBOX_R_I_AHN
 from .utils.layer import create_memorylayer_of_shapefilelayer
-from .utils.layer import join_layers
+from .utils.layer import join_layers_by_attribute
 
 
 class SewerAssessor:
@@ -235,6 +238,7 @@ class SewerAssessor:
             if self.dockwidget == None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = SewerAssessorDockWidget()
+                # INPUT
                 # Connect the search buttons with the search_file functions
                 self.dockwidget.r_i_gebiedsgrenzen_search.clicked.connect(
                     self.search_file_r_i_gebiedsgrenzen)
@@ -246,10 +250,18 @@ class SewerAssessor:
                     self.search_file_r_i_rioolleidingen_search)
                 self.dockwidget.r_i_ahn_search.clicked.connect(
                     self.search_file_r_i_ahn)
+                # OUTPUT
                 # Connect gem zettingssnelheid put to gem_zettingssnelheid_put
                 # function
                 self.dockwidget.r_o_gem_zettingssnelheid_put_button.clicked.connect(
                     self.gem_zettingssnelheid_put)
+                # Connect gem zettingssnelheid put to gem_zettingssnelheid_put
+                # function
+                self.dockwidget.r_o_gem_zettingssnelheid_rioolgebied_button.clicked.connect(
+                    self.gem_zettingssnelheid_rioolgebied)
+                # Connect absolute zetting put to abs_zetting_put function
+                self.dockwidget.r_o_abs_zetting_put_button.clicked.connect(
+                    self.abs_zetting_put)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -309,5 +321,43 @@ class SewerAssessor:
 
         # 4. Join putdata(Knoopnr) with the putten of putten_stats.shp
         # (putcode)
-        join_layers(
-            self.layer_rioolputten_memory, self.layer_gem_zettingssnelheid_put)
+        target_field = "Knoopnr"
+        input_field = "putcode"
+        join_layers_by_attribute(
+            self.layer_rioolputten_memory, target_field,
+            self.layer_gem_zettingssnelheid_put, input_field)
+
+    def gem_zettingssnelheid_rioolgebied(self):
+        """Bereken en toon gemiddelde zettingssnelheid per rioolgebied met zettingssnelheid van putten."""
+        # 1. Laad shapefile in met gebiedsgrenzen (putten_export_kikker.shp)
+        self.layer_gebiedsgrenzen = self.iface.addVectorLayer(
+            self.dockwidget.r_i_gebiedsgrenzen_text.text(),
+            "gebiedsgrenzen",
+            "ogr")
+        # 2. Referentie naar de putdata --> self.layer_rioolputten_memory
+        # 3. Aggregeer putdata naar de gebiedsgrenzen
+        self.aggregeer_putten(
+            self.layer_gebiedsgrenzen, self.layer_rioolputten)
+        # # Spatial index maakt dit sneller!
+
+    def aggregeer_putten(self, polygons, points):
+        """Aggregeer de putten naar de rioolgebieden."""
+        # Create join_layers_by_location function in layers module
+        output = save_shape(self)
+        output_name = "{}.shp".format(output)
+        processing.runalg(
+            "qgis:joinattributesbylocation", polygons, points, u'contains', 1,
+            0, u'mean', 0, output)
+
+        # Add the layer to the map
+        layer_name = re.sub(r"[a-zA-Z_0-9]*/", "", output_name)
+        layer_name = re.sub(r"[a-zA-Z_0-9]*.", "", layer_name)
+        layer_name = re.sub(r".*[a-zA-Z_0-9]", "", layer_name)
+        self.layer_aggregeer_putten = self.iface.addVectorLayer(
+            output_name,
+            layer_name,
+            "ogr")
+
+    def abs_zetting_put(self):
+        """Calculate the absolute zetting of the sewer."""
+        print "Running abs zetting put..."

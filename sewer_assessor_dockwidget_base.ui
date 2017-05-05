@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>431</width>
-    <height>837</height>
+    <height>888</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,11 +26,14 @@
       <x>0</x>
       <y>0</y>
       <width>431</width>
-      <height>811</height>
+      <height>861</height>
      </rect>
     </property>
     <property name="currentIndex">
      <number>0</number>
+    </property>
+    <property name="movable">
+     <bool>true</bool>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -55,7 +58,7 @@
         <x>10</x>
         <y>40</y>
         <width>411</width>
-        <height>421</height>
+        <height>461</height>
        </rect>
       </property>
       <property name="title">
@@ -84,7 +87,10 @@
         </rect>
        </property>
        <property name="text">
-        <string>putten_stats.shp</string>
+        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/wijken_schiedam.shp</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>shapefile.shp</string>
@@ -126,7 +132,10 @@
         </rect>
        </property>
        <property name="text">
-        <string>putten_stats.shp</string>
+        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/putten_stats.shp</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>shapefile.shp</string>
@@ -195,7 +204,7 @@
         <rect>
          <x>250</x>
          <y>110</y>
-         <width>121</width>
+         <width>81</width>
          <height>27</height>
         </rect>
        </property>
@@ -287,7 +296,10 @@
         </rect>
        </property>
        <property name="text">
-        <string>putten_export_kikker.shp</string>
+        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/putten_export_kikker.shp</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>shapefile.shp</string>
@@ -331,69 +343,43 @@
        <property name="text">
         <string>dem_schiedam.tif</string>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>ahn2.tif</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="r_i_ahn_search">
-       <property name="geometry">
-        <rect>
-         <x>310</x>
-         <y>350</y>
-         <width>99</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Zoek...</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="r_i_max_restzettingseis_label">
+      <widget class="QLabel" name="r_i_ahn_jaar_label">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>390</y>
-         <width>191</width>
+         <width>251</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>Maximale restzettingseis</string>
+        <string>Jaar van invliegen/inwinnen AHN</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="r_i_max_restzettingseis_text">
+      <widget class="QLineEdit" name="r_i_ahn_jaar_text">
        <property name="geometry">
         <rect>
          <x>250</x>
          <y>390</y>
-         <width>81</width>
+         <width>121</width>
          <height>27</height>
         </rect>
        </property>
        <property name="text">
-        <string>25</string>
+        <string/>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="placeholderText">
-        <string>25</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="r_i_max_restzettingseis_unit">
-       <property name="geometry">
-        <rect>
-         <x>340</x>
-         <y>390</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>cm</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <string>2008</string>
        </property>
       </widget>
       <widget class="QPushButton" name="r_i_rioolleidingen_search">
@@ -421,8 +407,88 @@
        <property name="text">
         <string>leidingen_export_kikker.shp</string>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>shapefile.shp</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="r_i_max_restzettingseis_text">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>430</y>
+         <width>81</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>25</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="placeholderText">
+        <string>25</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="r_i_max_restzettingseis_unit">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>430</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>cm</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="r_i_ahn_search">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>350</y>
+         <width>99</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Zoek...</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="r_i_kolom_gem_zettingssnelheid_unit">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>110</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>mm/ jaar</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="r_i_max_restzettingseis_label">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>430</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Maximale restzettingseis</string>
        </property>
       </widget>
      </widget>
@@ -430,7 +496,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>470</y>
+        <y>520</y>
         <width>411</width>
         <height>301</height>
        </rect>
@@ -620,21 +686,6 @@
         <string>Toon</string>
        </property>
       </widget>
-      <zorder>r_o_gem_zettingssnelheid_put_label</zorder>
-      <zorder>r_o_jaar_van_falen_rioolgebied_label</zorder>
-      <zorder>r_o_gem_jaar_aanleg_rioolgebied_label</zorder>
-      <zorder>r_o_abs_zetting_put_label</zorder>
-      <zorder>r_o_gem_abs_zetting_rioolgebied_label</zorder>
-      <zorder>r_o_stdev_zetting_rioolgebied</zorder>
-      <zorder>r_o_gem_zettingssnelheid_rioolgebied_label</zorder>
-      <zorder>r_o_gem_jaar_aanleg_rioolgebied_button</zorder>
-      <zorder>r_o_jaar_van_falen_rioolgebied_button</zorder>
-      <zorder>r_o_gem_zettingssnelheid_put_button</zorder>
-      <zorder>r_o_gem_zettingssnelheid_rioolgebied_button</zorder>
-      <zorder>r_o_stdev_zetting_rioolgebied_button</zorder>
-      <zorder>r_o_stdev_zetting_rioolgebied_button</zorder>
-      <zorder>r_o_abs_zetting_put_button</zorder>
-      <zorder>r_o_gem_abs_zetting_rioolgebied_button</zorder>
      </widget>
      <widget class="QLabel" name="r_i_kolom_jaar_van_aanleg_label">
       <property name="geometry">
@@ -1403,18 +1454,7 @@
         <string>Toon</string>
        </property>
       </widget>
-      <zorder>label_17</zorder>
-      <zorder>label_31</zorder>
-      <zorder>label_32</zorder>
-      <zorder>pushButton_15</zorder>
-      <zorder>pushButton_13</zorder>
-      <zorder>pushButton_15</zorder>
-      <zorder>pushButton_16</zorder>
      </widget>
-     <zorder>label_3</zorder>
-     <zorder>groupBox_5</zorder>
-     <zorder>groupBox_6</zorder>
-     <zorder>pushButton_15</zorder>
     </widget>
    </widget>
   </widget>

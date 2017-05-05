@@ -4,8 +4,9 @@ from qgis.core import QgsMapLayerRegistry
 from qgis.core import QgsVectorLayer
 from qgis.core import QgsGeometry
 from qgis.core import QgsPoint
-from qgis.core import QgsExpression
-from qgis.core import QgsFeatureRequest
+# from qgis.core import QgsExpression
+# from qgis.core import QgsFeatureRequest
+from qgis.core import QgsVectorJoinInfo
 
 from .constants import EPSG3857
 
@@ -56,46 +57,14 @@ def add_features(memory_layer, shapefile_layer):
     memory_layer.commitChanges()
 
 
-def join_layers(memory_layer, shapefile_layer):
+def join_layers_by_attribute(target_layer, target_field, input_layer,
+                             input_field):
     """Function to add attributes from a shapefile layer to a memory layer."""
     # Add missing fields
-    add_attributes(memory_layer, shapefile_layer)
-    # Fill empty fields
-    for feature_memory in memory_layer.getFeatures():
-            try:
-                exp = QgsExpression(
-                    u'putcode ILIKE {}{}{}'.format(
-                        "'%", feature_memory["Knoopnr"], "%'"))
-                request = QgsFeatureRequest(exp)
-                requested_features = shapefile_layer.getFeatures(request)
-                for requested_feature in requested_features:
-                    feature_memory.setAttribute(
-                        "vir_pnt_id", requested_feature["vir_pnt_id"])
-                    feature_memory.setAttribute(
-                        "putcode", requested_feature["putcode"])
-                    feature_memory.setAttribute(
-                        "object_gui", requested_feature["object_gui"])
-                    feature_memory.setAttribute(
-                        "buffer_siz", requested_feature["buffer_siz"])
-                    feature_memory.setAttribute(
-                        "num_points", requested_feature["num_points"])
-                    feature_memory.setAttribute(
-                        "w_pnt_line", requested_feature["w_pnt_line"])
-                    feature_memory.setAttribute(
-                        "avg_pnt_li", requested_feature["avg_pnt_li"])
-                    feature_memory.setAttribute(
-                        "stddev_pnt", requested_feature["stddev_pnt"])
-                    feature_memory.setAttribute(
-                        "min_pnt_li", requested_feature["min_pnt_li"])
-                    feature_memory.setAttribute(
-                        "max_pnt_li", requested_feature["max_pnt_li"])
-                    feature_memory.setAttribute(
-                        "max_diff_p", requested_feature["max_diff_p"])
-                    feature_memory.setAttribute(
-                        "ogc_fid", requested_feature["ogc_fid"])
-                    memory_layer.updateFields()
-                    print 'new feature added{}'.format(
-                        requested_feature["putcode"])
-                    break
-            except:
-                print 'no feature'
+    add_attributes(target_layer, input_layer)
+    join_object = QgsVectorJoinInfo()
+    join_object.joinLayerId = input_layer.id()
+    join_object.joinFieldName = input_field
+    join_object.targetFieldName = target_field
+    target_layer.addJoin(join_object)  # You should get True as response
+    # add input_field ass attribute
