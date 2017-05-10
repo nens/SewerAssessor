@@ -66,3 +66,15 @@ class SewerAssessorDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.r_i_rioolleidingen_text.setText(filename)
         if TEXTBOX == TEXTBOX_R_I_AHN:
             self.r_i_ahn_text.setText(filename)
+
+    # def set_attributes_in_combobox(self, combobox, attributes):
+    #     """Show attributes of shapefile in combobox."""
+    #     for attribute in attributes:
+    #         combobox.addItem(attribute)
+    #
+    # from PyQt4.QtGui import QComboBox
+    # lyr = iface.activeLayer()
+    # idx = lyr.dataProvider().fieldNameIndex( 'NAME_1' )
+    # uv = lyr.dataProvider().uniqueValues( idx )
+    # cb = QComboBox()
+    # cb.addItems( uv )
