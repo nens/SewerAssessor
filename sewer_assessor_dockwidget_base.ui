@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
-    <height>887</height>
+    <width>432</width>
+    <height>888</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -87,7 +87,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/wijken_schiedam.shp</string>
+        <string>wijken_schiedam.shp</string>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -132,7 +132,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/putten_stats.shp</string>
+        <string>putten_stats.shp</string>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -296,7 +296,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/putten_export_kikker.shp</string>
+        <string>putten_export_kikker.shp</string>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -341,7 +341,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/madeleine.vanwinkel/code/Work/SewerAssessorPlugin/SewerAssessor/input_data/dem_schiedam.tif</string>
+        <string>dem_schiedam.tif</string>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -491,12 +491,56 @@
         <string>Maximale restzettingseis</string>
        </property>
       </widget>
+      <widget class="QLabel" name="r_i_kolom_jaar_van_aanleg_label">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>230</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Kolom jaar van aanleg</string>
+       </property>
+      </widget>
+      <zorder>r_i_gebiedsgrenzen_label</zorder>
+      <zorder>r_i_gebiedsgrenzen_text</zorder>
+      <zorder>r_i_gebiedsgrenzen_search</zorder>
+      <zorder>r_i_gem_zettingssnelheid_put_label</zorder>
+      <zorder>r_i_gem_zettingssnelheid_put_text</zorder>
+      <zorder>r_i_gem_zettingssnelheid_put_search</zorder>
+      <zorder>r_i_kolom_stdev_zettingssnelheid_label</zorder>
+      <zorder>r_i_kolom_stdev_zettingssnelheid_text</zorder>
+      <zorder>r_i_kolom_gem_zettingssnelheid_label</zorder>
+      <zorder>r_i_kolom_gem_zettingssnelheid_text</zorder>
+      <zorder>r_i_kolom_jaar_van_aanleg_text</zorder>
+      <zorder>r_i_kolom_aanleg_hoogte_text</zorder>
+      <zorder>r_i_kolom_aanleg_hoogte_label</zorder>
+      <zorder>r_i_riool_leidingen_label</zorder>
+      <zorder>r_i_rioolputten_label</zorder>
+      <zorder>r_i_rioolputten_text</zorder>
+      <zorder>r_i_rioolputten_search</zorder>
+      <zorder>r_i_ahn_label</zorder>
+      <zorder>r_i_ahn_text</zorder>
+      <zorder>r_i_ahn_jaar_label</zorder>
+      <zorder>r_i_ahn_jaar_text</zorder>
+      <zorder>r_i_rioolleidingen_search</zorder>
+      <zorder>r_i_rioolleidingen_text</zorder>
+      <zorder>r_i_max_restzettingseis_text</zorder>
+      <zorder>r_i_max_restzettingseis_unit</zorder>
+      <zorder>r_i_ahn_search</zorder>
+      <zorder>r_i_kolom_gem_zettingssnelheid_unit</zorder>
+      <zorder>r_i_max_restzettingseis_label</zorder>
+      <zorder>r_header</zorder>
+      <zorder>r_i_kolom_jaar_van_aanleg_label</zorder>
+      <zorder>r_i_kolom_jaar_van_aanleg_label</zorder>
      </widget>
      <widget class="QGroupBox" name="restlevensduur_output">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>520</y>
+        <y>510</y>
         <width>411</width>
         <height>301</height>
        </rect>
@@ -686,19 +730,6 @@
         <string>Toon</string>
        </property>
       </widget>
-     </widget>
-     <widget class="QLabel" name="r_i_kolom_jaar_van_aanleg_label">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>270</y>
-        <width>191</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Kolom jaar van aanleg</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">

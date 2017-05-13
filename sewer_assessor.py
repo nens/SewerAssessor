@@ -25,7 +25,9 @@ import processing
 import re
 
 from qgis.core import QgsField
+from qgis.core import QgsMapLayerRegistry
 from qgis.core import QgsVectorFileWriter
+from qgis.core import QgsVectorLayer
 from PyQt4.QtCore import QCoreApplication
 from PyQt4.QtCore import QSettings
 from PyQt4.QtCore import Qt
@@ -52,7 +54,13 @@ from .utils.constants import TEXTBOX_R_I_AHN
 from .utils.get_data import get_file
 from .utils.save_data import save_shape
 from .utils.layer import add_label_to_layer
-from .utils.layer import add_layer
+# from .utils.layer import add_layer
+
+# ROOT = os.path.realpath(__file__)
+INPUT_DATA_ROOT = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'input_data')
+OUTPUT_DATA_ROOT = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'output_data')
 
 
 class SewerAssessor:
@@ -251,10 +259,14 @@ class SewerAssessor:
                 # function
                 self.dockwidget.r_o_gem_zettingssnelheid_put_button.clicked.connect(
                     self.gem_zettingssnelheid_put)
-                # Connect gem zettingssnelheid put to gem_zettingssnelheid_put
+                # Connect gem zettingssnelheid rioolgebied to gem_zettingssnelheid_rioolgebied
                 # function
                 self.dockwidget.r_o_gem_zettingssnelheid_rioolgebied_button.clicked.connect(
                     self.gem_zettingssnelheid_rioolgebied)
+                # Connect standard deviation zettingssnelheid rioolgebied to stdev_zettingssnelheid_rioolgebied
+                # function
+                self.dockwidget.r_o_stdev_zetting_rioolgebied_button.clicked.connect(
+                    self.stdev_zettingssnelheid_rioolgebied)
                 # Connect absolute zetting put to abs_zetting_put function
                 self.dockwidget.r_o_abs_zetting_put_button.clicked.connect(
                     self.abs_zetting_put)
@@ -316,77 +328,129 @@ class SewerAssessor:
     def gem_zettingssnelheid_put(self):
         """Bereken en toon gemiddelde zettingssnelheid per put."""
         # 1. Laad shapefile in met putdata (putten_export_kikker.shp)
+        file_name = "putten_export_kikker"
+        shp_path = os.path.join(INPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
         self.layer_rioolputten = self.iface.addVectorLayer(
-            self.dockwidget.r_i_rioolputten_text.text(),
-            "putten_export_kikker",
-            "ogr")
+            shp_path, file_name, "ogr")
+        # self.layer_rioolputten = self.iface.addVectorLayer(
+        #     self.dockwidget.r_i_rioolputten_text.text(),
+        #     "putten_export_kikker",
+        #     "ogr")
         # 2. Laad shapefile in met putcodes en zettingssnelheden
         # (putten_stats.shp)
+        file_name = "putten_stats"
+        shp_path = os.path.join(INPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
         self.layer_gem_zettingssnelheid_put = self.iface.addVectorLayer(
-            self.dockwidget.r_i_gem_zettingssnelheid_put_text.text(),
-            "putten_stats",
-            "ogr")
+            shp_path, file_name, "ogr")
+        # self.layer_gem_zettingssnelheid_put = self.iface.addVectorLayer(
+        #     self.dockwidget.r_i_gem_zettingssnelheid_put_text.text(),
+        #     "putten_stats",
+        #     "ogr")
         # 3. Create a new shapefile with the features of the putdata
         # (putten_export_kikker.shp)
-        save_message = "Save gemiddelde zettingssnelheid rioolput"
-        output = save_shape(self, save_message)
-        output_name = "{}.shp".format(output)
+        # save_message = "Save gemiddelde zettingssnelheid rioolput"
+        # output = save_shape(self, save_message)
+        # output_name = "{}.shp".format(output)
+        # layer_name = re.sub(r".*/", "", output_name)
+        # layer_name = re.sub(r".shp", "", layer_name)
         # 4. Join putdata(Knoopnr) with the putten of putten_stats.shp
         # (putcode)
-        target_field = "Knoopnr"
-        input_field = "putcode"
-        self.layer_rioolputten_joined = processing.runalg(
-            'qgis:joinattributestable', self.layer_rioolputten,
-            self.layer_gem_zettingssnelheid_put, target_field, input_field,
-            output)
-        # Add the layer to the map
-        self.layer_rioolputten_joined = add_layer(self.iface, output_name)
+        # target_field = "Knoopnr"
+        # input_field = "putcode"
+        # self.layer_rioolputten_joined = processing.runalg(
+        #     'qgis:joinattributestable', self.layer_rioolputten,
+        #     self.layer_gem_zettingssnelheid_put, target_field, input_field,
+        #     output)
+        # # Add the layer to the map
+        # self.layer_rioolputten_joined = add_layer(self.iface, output_name)
+        # # Add the layer to the map
+        file_name = "gemiddelde_zetting_putten_mm_jaar"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_rioolputten_joined = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
 
     def gem_zettingssnelheid_rioolgebied(self):
         """Toon gemiddelde zettingssnelheid per rioolgebied."""
         # 1. Laad shapefile in met gebiedsgrenzen (putten_export_kikker.shp)
+        file_name = "wijken_schiedam"
+        shp_path = os.path.join(INPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
         self.layer_gebiedsgrenzen = self.iface.addVectorLayer(
-            self.dockwidget.r_i_gebiedsgrenzen_text.text(),
-            "gebiedsgrenzen",
-            "ogr")
+            shp_path, file_name, "ogr")
+        # output_name = self.dockwidget.r_i_gebiedsgrenzen_text.text()
+        # layer_name = re.sub(r".*/", "", output_name)
+        # layer_name = re.sub(r".shp", "", layer_name)
+        # self.layer_gebiedsgrenzen = self.iface.addVectorLayer(
+        #     self.dockwidget.r_i_gebiedsgrenzen_text.text(),
+        #     layer_name,
+        #     "ogr")
         # 2. Referentie naar de putdata --> self.layer_rioolputten
         # 3. Aggregeer putdata naar de gebiedsgrenzen
-        save_message = "Save gemiddelde zettingssnelheid rioolgebied"
-        self.layer_aggregeer_putten = self.aggregeer_putten(
-            self.layer_gebiedsgrenzen, self.layer_rioolputten, save_message)
+        # save_message = "Save gemiddelde zettingssnelheid rioolgebied"
+        # output = save_shape(self, save_message)
+        # output_name = "{}.shp".format(output)
+        # layer_name = re.sub(r".*/", "", output_name)
+        # layer_name = re.sub(r".shp", "", layer_name)
+        file_name = "gemiddelde_zetting_gebied_mm_jaar"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_aggregeer_putten = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
+        # self.layer_aggregeer_putten = self.aggregeer_putten(
+        #     self.layer_gebiedsgrenzen, self.layer_rioolputten, save_message)
         # Rename field to mean zettingssnelheid
         # # Spatial index maakt dit sneller!
 
-    def aggregeer_putten(self, polygons, points, save_message):
-        """Aggregeer de putten naar de rioolgebieden."""
-        # Create join_layers_by_location function in layers module
-        output = save_shape(self, save_message)
-        output_name = "{}.shp".format(output)
-        processing.runalg(
-            "qgis:joinattributesbylocation", polygons, points, u'contains', 1,
-            0, u'mean', 0, output)
+    # def aggregeer_putten(self, polygons, points, save_message):
+    #     """Aggregeer de putten naar de rioolgebieden."""
+    #     # Create join_layers_by_location function in layers module
+    #     output = save_shape(self, save_message)
+    #     output_name = "{}.shp".format(output)
+    #     processing.runalg(
+    #         "qgis:joinattributesbylocation", polygons, points, u'contains', 1,
+    #         0, u'mean', 0, output)
 
-        # Add the layer to the map
-        layer_name = re.sub(r".*/", "", output_name)
-        layer_name = re.sub(r".shp", "", layer_name)
-        layer = self.iface.addVectorLayer(output_name, layer_name, "ogr")
-        return layer
+    #     # Add the layer to the map
+    #     layer_name = re.sub(r".*/", "", output_name)
+    #     layer_name = re.sub(r".shp", "", layer_name)
+    #     layer = self.iface.addVectorLayer(output_name, layer_name, "ogr")
+    #     return layer
+
+    def stdev_zettingssnelheid_rioolgebied(self):
+        """Toon standaard deviatie per rioolgebied."""
+        file_name = "gemiddelde_standaard_deviatie_gebied"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_gem_stdev_gebied = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
 
     def abs_zetting_put(self):
         """Calculate the absolute zetting of the sewer."""
-        save_message = "Save absolute zetting put"
-        output = save_shape(self, save_message)
-        output_name = "{}.shp".format(output)
-        # Create new layer abs_zetting_put of self.layer_rioolputten_joined
-        self.layer_abs_zetting_put = QgsVectorFileWriter.writeAsVectorFormat(
-            self.layer_rioolputten_joined, output_name,
-            "CP1250", None, "ESRI Shapefile")
-        # Add the layer to the map
-        self.layer_abs_zetting_put = add_layer(self.iface, output_name)
-        # Add field (abs_zet)
-        self.layer_abs_zetting_put.dataProvider().addAttributes(
-            [QgsField("abs_zet", QVariant.Double)])
-        self.layer_abs_zetting_put.updateFields()
+        # Load the raster layer
+        file_name = "dem_schiedam"
+        shp_path = os.path.join(INPUT_DATA_ROOT, "{}.tif".format(file_name))
+        print shp_path
+        self.ahn_layer = self.iface.addRasterLayer(shp_path, file_name)
+        # output_name = self.dockwidget.r_i_ahn_text.text()
+        # layer_name = re.sub(r".*/", "", output_name)
+        # layer_name = re.sub(r".tif", "", layer_name)
+        # self.ahn_layer = self.iface.addRasterLayer(output_name, layer_name)
+        # save_message = "Save absolute zetting put"
+        # output = save_shape(self, save_message)
+        # output_name = "{}.shp".format(output)
+        # # Create new layer abs_zetting_put of self.layer_rioolputten_joined
+        # self.layer_abs_zetting_put = QgsVectorFileWriter.writeAsVectorFormat(
+        #     self.layer_rioolputten_joined, output_name,
+        #     "CP1250", None, "ESRI Shapefile")
+        # # Add the layer to the map
+        # self.layer_abs_zetting_put = add_layer(self.iface, output_name)
+        # # Add field (abs_zet)
+        # self.layer_abs_zetting_put.dataProvider().addAttributes(
+        #     [QgsField("abs_zet", QVariant.Double)])
+        # self.layer_abs_zetting_put.updateFields()
 
         # # # Create polygon of raster (dem)
         # # # https://pcjericks.github.io/py-gdalogr-cookbook/raster_layers.html#polygonize-a-raster-band
@@ -421,44 +485,65 @@ class SewerAssessor:
         # dst_layer = dst_ds.CreateLayer(dst_layername, srs = None )
         # gdal.Polygonize( srcband, None, dst_layer, -1, [], callback=None )
 
-        # Calculate field
-        import datetime
-        current_year = datetime.datetime.now().year
-        # abolute zetting = putten_stats_avg_pnt_li * (current_year - Jaar)
-        self.layer_abs_zetting_put.startEditing()
-        for feature in self.layer_abs_zetting_put.getFeatures():
-            if isinstance(feature["avg_pnt_li"], float):
-                if isinstance(feature["Jaar"], unicode):
-                    abs_zet = feature["avg_pnt_li"] * float(current_year - int(
-                        feature["Jaar"]))
-                    feature["abs_zet"] = abs_zet
-                    self.layer_abs_zetting_put.updateFeature(feature)
-        self.layer_abs_zetting_put.commitChanges()
+        # # Calculate field
+        # import datetime
+        # current_year = datetime.datetime.now().year
+        # # abolute zetting = putten_stats_avg_pnt_li * (current_year - Jaar)
+        # self.layer_abs_zetting_put.startEditing()
+        # for feature in self.layer_abs_zetting_put.getFeatures():
+        #     if isinstance(feature["avg_pnt_li"], float):
+        #         if isinstance(feature["Jaar"], unicode):
+        #             abs_zet = feature["avg_pnt_li"] * float(current_year - int(
+        #                 feature["Jaar"]))
+        #             feature["abs_zet"] = abs_zet
+        #             self.layer_abs_zetting_put.updateFeature(feature)
+        # self.layer_abs_zetting_put.commitChanges()
+
+        file_name = "absolute_zetting_putten_mm"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_abs_zetting_put = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
 
     def gem_abs_zet_rioolgebied(self):
         """Bepaal de gemiddelde absolute zetting van een rioolgebied."""
-        # Referentie naar de absolute zetting per put -->
-        # self.layer_abs_zetting_put
-        # Aggregeer absolute zetting naar de gebiedsgrenzen
-        save_message = "Save gemiddelde absolute zetting rioolgebied"
-        self.layer_gem_abs_zetting_rioolgebied = self.aggregeer_putten(
-            self.layer_gebiedsgrenzen, self.layer_abs_zetting_put, save_message
-        )
-        # Rename field to mean absolute zetting rioolgebied
-        # # Spatial index maakt dit sneller!
+        # # Referentie naar de absolute zetting per put -->
+        # # self.layer_abs_zetting_put
+        # # Aggregeer absolute zetting naar de gebiedsgrenzen
+        # save_message = "Save gemiddelde absolute zetting rioolgebied"
+        # self.layer_gem_abs_zetting_rioolgebied = self.aggregeer_putten(
+        #     self.layer_gebiedsgrenzen, self.layer_abs_zetting_put, save_message
+        # )
+        # # Rename field to mean absolute zetting rioolgebied
+        # # # Spatial index maakt dit sneller!
+
+        file_name = "gemiddelde_absolute_zetting_gebied_mm"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_gem_abs_zetting_rioolgebied = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
 
     def gem_jaar_aanleg_rioolgebied(self):
         """Bepaal de gemiddelde absolute zetting van een rioolgebied."""
-        # Referentie naar de absolute zetting per put -->
-        # self.layer_abs_zetting_put
-        # Rename field to mean jaar aanleg rioolgebied
-        # # Spatial index maakt dit sneller!
+        # # Referentie naar de absolute zetting per put -->
+        # # self.layer_abs_zetting_put
+        # # Rename field to mean jaar aanleg rioolgebied
+        # # # Spatial index maakt dit sneller!
+        # # Aggregeer absolute zetting naar de gebiedsgrenzen
+        # save_message = "Save gemiddelde jaar aanleg rioolgebied"
+        # self.layer_gem_jaar_aanleg_rioolgebied = self.aggregeer_putten(
+        #     self.layer_gebiedsgrenzen, self.layer_abs_zetting_put, save_message
+        # )
+        # # Add label to layer
+        # field = self.dockwidget.r_i_kolom_jaar_van_aanleg_text.text()
+        # self.layer_gem_jaar_aanleg_rioolgebied = add_label_to_layer(
+        #     self.iface, self.layer_gem_jaar_aanleg_rioolgebied, field)
 
-        # Aggregeer absolute zetting naar de gebiedsgrenzen
-        save_message = "Save gemiddelde jaar aanleg rioolgebied"
-        self.layer_gem_jaar_aanleg_rioolgebied = self.aggregeer_putten(
-            self.layer_gebiedsgrenzen, self.layer_abs_zetting_put, save_message
-        )
+        file_name = "gemiddeld_jaar_van_aanleg"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_gem_jaar_aanleg_rioolgebied = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
         # Add label to layer
         field = self.dockwidget.r_i_kolom_jaar_van_aanleg_text.text()
         self.layer_gem_jaar_aanleg_rioolgebied = add_label_to_layer(
@@ -466,34 +551,44 @@ class SewerAssessor:
 
     def jaar_van_falen_rioolgebied(self):
         """Function to calculate the year of failure of the sewer area."""
-        save_message = "Save jaar van falen rioolgebied"
-        output = save_shape(self, save_message)
-        output_name = "{}.shp".format(output)
-        # Create new layer jaar_van_falen of self.layer_rioolputten_joined
-        self.layer_jaar_van_falen = QgsVectorFileWriter.writeAsVectorFormat(
-            self.layer_gem_abs_zetting_rioolgebied, output_name,
-            "CP1250", None, "ESRI Shapefile")
-        # Add the layer to the map
-        self.layer_jaar_van_falen = add_layer(self.iface, output_name)
-        # Add field (jaar_van_falen_field)
-        jaar_van_falen_field = "jaar_falen"
-        self.layer_jaar_van_falen.dataProvider().addAttributes(
-            [QgsField(jaar_van_falen_field, QVariant.Double)])
-        self.layer_jaar_van_falen.updateFields()
-        # Calculate field
-        jaar_van_aanleg_field = self.dockwidget.r_i_kolom_jaar_van_aanleg_text.text()
-        max_restzettingseis = float(
-            self.dockwidget.r_i_max_restzettingseis_text.text()) / 100
-        # Jaar van falen =
-        # jaar_van_aanleg_field + abs(max_restzettingseis / "avg_pnt__1")
-        self.layer_jaar_van_falen.startEditing()
-        for feature in self.layer_jaar_van_falen.getFeatures():
-            jaar_van_falen_value = int(round(float(
-                feature[jaar_van_aanleg_field]) + abs(
-                max_restzettingseis / float(feature["avg_pnt_li"]))))
-            feature[jaar_van_falen_field] = jaar_van_falen_value
-            self.layer_jaar_van_falen.updateFeature(feature)
-        self.layer_jaar_van_falen.commitChanges()
+        # save_message = "Save jaar van falen rioolgebied"
+        # output = save_shape(self, save_message)
+        # output_name = "{}.shp".format(output)
+        # # Create new layer jaar_van_falen of self.layer_rioolputten_joined
+        # self.layer_jaar_van_falen = QgsVectorFileWriter.writeAsVectorFormat(
+        #     self.layer_gem_abs_zetting_rioolgebied, output_name,
+        #     "CP1250", None, "ESRI Shapefile")
+        # # Add the layer to the map
+        # self.layer_jaar_van_falen = add_layer(self.iface, output_name)
+        # # Add field (jaar_van_falen_field)
+        # jaar_van_falen_field = "jaar_falen"
+        # self.layer_jaar_van_falen.dataProvider().addAttributes(
+        #     [QgsField(jaar_van_falen_field, QVariant.Double)])
+        # self.layer_jaar_van_falen.updateFields()
+        # # Calculate field
+        # jaar_van_aanleg_field = self.dockwidget.r_i_kolom_jaar_van_aanleg_text.text()
+        # max_restzettingseis = float(
+        #     self.dockwidget.r_i_max_restzettingseis_text.text()) / 100
+        # # Jaar van falen =
+        # # jaar_van_aanleg_field + abs(max_restzettingseis / "avg_pnt__1")
+        # self.layer_jaar_van_falen.startEditing()
+        # for feature in self.layer_jaar_van_falen.getFeatures():
+        #     jaar_van_falen_value = int(round(float(
+        #         feature[jaar_van_aanleg_field]) + abs(
+        #         max_restzettingseis / float(feature["avg_pnt_li"]))))
+        #     feature[jaar_van_falen_field] = jaar_van_falen_value
+        #     self.layer_jaar_van_falen.updateFeature(feature)
+        # self.layer_jaar_van_falen.commitChanges()
+        # # Add label to layer
+        # self.layer_jaar_van_falen = add_label_to_layer(
+        #     self.iface, self.layer_jaar_van_falen, jaar_van_falen_field)
+
+        file_name = "restlevensduur_riolering_gebied"
+        shp_path = os.path.join(OUTPUT_DATA_ROOT, "{}.shp".format(file_name))
+        print shp_path
+        self.layer_jaar_van_falen = self.iface.addVectorLayer(
+            shp_path, file_name, "ogr")
         # Add label to layer
+        jaar_van_falen_field = "jaar_falen"
         self.layer_jaar_van_falen = add_label_to_layer(
             self.iface, self.layer_jaar_van_falen, jaar_van_falen_field)
